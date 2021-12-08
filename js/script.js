@@ -22,6 +22,8 @@ guessBtn.addEventListener("click", function(e){
     e.preventDefault()
     const capturedInput = input.value
     console.log(capturedInput)
+    input.value = ""
+    message.innerText= ""
     const validGuess = validateInput(capturedInput)
     if (validGuess){
         makeGuess(capturedInput)
@@ -41,7 +43,7 @@ const validateInput = function(input){
     }
     else {
         return input
-    }
+        }
 }
 
 const makeGuess = function(capturedInput){
@@ -52,5 +54,37 @@ const makeGuess = function(capturedInput){
     else {
         guessedLetters.push(capturedInput)
         console.log(guessedLetters)
+        guessedLettersPile()
+        updateWordInProgress(guessedLetters)
+}
+}
+
+const guessedLettersPile = function(){
+    guessedLettersList.innerHTML = ""
+    for (const letter of guessedLetters){
+        const li = document.createElement("li")
+        li.innerText = letter
+        guessedLettersList.append(li)
+    }
+}
+
+const updateWordInProgress = function(guessedLetters){
+    const wordUpper = word.toUpperCase()
+    const wordArray = wordUpper.split("")
+    const revealWord = []
+    for (const letter of wordArray){
+        if (guessedLetters.includes(letter)){
+            revealWord.push(letter)
+        }
+        else {revealWord.push("●")}
+    }
+    wordInProgress.innerText= revealWord.join("")
+    playerWon()
+}
+
+const playerWon = function(){
+    if (word.toUpperCase === wordInProgress.innerText){
+        message.classList.add("win")
+        message.innerHTML=`<p class="highlight"> You guessed the correct word! Congrats!</p>`
     }
 }
